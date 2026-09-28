@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academia de Lógica - Treinamento de Programadores</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Orbitron:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Orbitron', 'sans-serif'],
+                    },
+                    colors: {
+                        anime: {
+                            dark: '#0B0C10',
+                            panel: '#15161E',
+                            cyan: '#00F0FF',
+                            pink: '#FF007A',
+                            purple: '#7B2CBF',
+                        }
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm1 1h38v38H1V1z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E\")",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0B0C10;
+            color: #e2e8f0;
+        }
+        
+        .cyber-glitch:hover {
+            animation: glitch 0.2s cubic-bezier(.25, .46, .45, .94) both infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        .clip-diagonal {
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0C10; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF007A; 
+        }
+
+        .tab-active {
+            border-bottom-color: #00F0FF !important;
+            color: #00F0FF !important;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+        
+        .tag-marvel { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
+        .tag-noir { background: rgba(168, 162, 158, 0.1); color: #a8a29e; border-color: rgba(168, 162, 158, 0.3); }
+        .tag-rpg { background: rgba(16, 185, 129, 0.1); color: #10b981; border-color: rgba(16, 185, 129, 0.3); }
+        .tag-logistics { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-color: rgba(245, 158, 11, 0.3); }
+        .tag-monica { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-color: rgba(59, 130, 246, 0.3); }
+        .tag-tolkien { background: rgba(217, 119, 6, 0.1); color: #d97706; border-color: rgba(217, 119, 6, 0.3); }
+        .tag-yoshi { background: rgba(132, 204, 22, 0.1); color: #84cc16; border-color: rgba(132, 204, 22, 0.3); }
+        .tag-battalion { background: rgba(99, 102, 241, 0.1); color: #6366f1; border-color: rgba(99, 102, 241, 0.3); }
+        .tag-investigation { background: rgba(236, 72, 153, 0.1); color: #ec4899; border-color: rgba(236, 72, 153, 0.3); }
+        .tag-zombie { background: rgba(20, 184, 166, 0.1); color: #14b8a6; border-color: rgba(20, 184, 166, 0.3); }
+        .tag-hacker { background: rgba(217, 70, 239, 0.1); color: #d946ef; border-color: rgba(217, 70, 239, 0.3); }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---- Puzzle pieces (estilo Duolingo) ---- */
+        .puzzle-slot {
+            min-height: 2.75rem;
+            border: 2px dashed #374151;
+            border-radius: 0.6rem;
+            display: flex;
+            align-items: center;
+            padding: 0.4rem 0.9rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: #4b5563;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .puzzle-slot-filled {
+            border-style: solid;
+            border-color: #2d3748;
+            background: #1a1c26;
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: transform 0.1s ease, border-color 0.15s ease;
+        }
+        .puzzle-slot-filled:hover {
+            transform: scale(0.98);
+            border-color: #FF007A;
+        }
+        .puzzle-slot-correct { border-color: #10b981 !important; background: rgba(16,185,129,0.08) !important; color: #6ee7b7 !important; }
+        .puzzle-slot-wrong { border-color: #ef4444 !important; background: rgba(239,68,68,0.08) !important; color: #fca5a5 !important; animation: shakeX 0.35s; }
+        @keyframes shakeX {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+
+        .puzzle-tile {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            white-space: pre;
+            background: #1f2937;
+            border: 2px solid #374151;
+            border-bottom-width: 4px;
+            border-radius: 0.6rem;
+            padding: 0.5rem 0.9rem;
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: transform 0.1s ease, border-color 0.15s ease, background 0.15s ease;
+            position: relative;
+        }
+        .puzzle-tile::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background: inherit;
+            border: 2px solid #374151;
+            border-radius: 9999px;
+        }
+        .puzzle-tile:hover {
+            border-color: #00F0FF;
+            background: #26293a;
+            transform: translateY(-2px);
+        }
+        .puzzle-tile:active {
+            transform: translateY(0) scale(0.96);
+        }
+    </style>
+</head>
+<body class="bg-grid-pattern min-h-screen flex flex-col font-sans selection:bg-anime-pink selection:text-white">
+
+    <header class="relative border-b border-gray-800 bg-anime-dark/80 backdrop-blur-md z-50">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-anime-cyan via-anime-purple to-anime-pink"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 rounded-lg bg-gray-900 border border-anime-cyan/50 flex items-center justify-center relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-anime-cyan/20 translate-y-full group-hover:translate-y-0 transition-transform"></div>
+                    <i class="fa-solid fa-code text-anime-cyan text-xl relative z-10"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-display font-bold text-white tracking-wider uppercase cyber-glitch">Academia de Lógica</h1>
+                    
+                </div>
+            </div>
+            <div class="mt-4 md:mt-0 flex items-center space-x-3 text-sm font-display text-gray-400">
+                <span class="flex items-center"><i class="fa-solid fa-database mr-2 text-anime-cyan"></i> 38 Desafios</span>
+                <span class="text-gray-600">|</span>
+                <span class="flex items-center"><i class="fa-solid fa-signal mr-2 text-anime-pink"></i> Nível: Iniciante/Intermediário</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8 relative z-10">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-full lg:w-64 shrink-0">
+            <div class="sticky top-8 bg-anime-panel border border-gray-800 rounded-xl p-4 clip-diagonal shadow-2xl">
+                <h2 class="text-gray-400 font-display text-xs uppercase tracking-widest mb-4 px-2">Módulos de Treinamento</h2>
+                <nav class="space-y-2 font-display text-sm" id="module-nav">
+                    <!-- Nav items will be managed by JS -->
+                    <button onclick="showModule(0)" id="btn-mod-0" class="w-full text-left px-4 py-3 rounded-lg border border-transparent hover:bg-gray-800/50 hover:text-white transition-all text-gray-400 flex justify-between items-center group">
+                        <span>0. Algoritmos & Fluxos</span>
+                        <i class="fa-solid fa-chevron-right opacity-0 group-hover:opacity-100 transition-opacity text-anime-cyan text-xs"></i>
+                    </button>
+                    <button onclick="showModule(1)" id="btn-mod-1" class="w-full text-left px-4 py-3 rounded-lg border border-transparent hover:bg-gray-800/50 hover:text-white transition-all text-gray-400 flex justify-between items-center group tab-active">
+                        <span>I. Variáveis & Tipos</span>
+                        <i class="fa-solid fa-chevron-right opacity-0 group-hover:opacity-100 transition-opacity text-anime-cyan text-xs"></i>
+                    </button>
+                    <button onclick="showModule(2)" id="btn-mod-2" class="w-full text-left px-4 py-3 rounded-lg border border-transparent hover:bg-gray-800/50 hover:text-white transition-all text-gray-400 flex justify-between items-center group">
+                        <span>II. Condicionais</span>
+                        <i class="fa-solid fa-chevron-right opacity-0 group-hover:opacity-100 transition-opacity text-anime-cyan text-xs"></i>
+                    </button>
+                    <button onclick="showModule(3)" id="btn-mod-3" class="w-full text-left px-4 py-3 rounded-lg border border-transparent hover:bg-gray-800/50 hover:text-white transition-all text-gray-400 flex justify-between items-center group">
+                        <span>III. Repetição (Loops)</span>
+                        <i class="fa-solid fa-chevron-right opacity-0 group-hover:opacity-100 transition-opacity text-anime-cyan text-xs"></i>
+                    </button>
+                    <button onclick="showModule(4)" id="btn-mod-4" class="w-full text-left px-4 py-3 rounded-lg border border-transparent hover:bg-gray-800/50 hover:text-white transition-all text-gray-400 flex justify-between items-center group">
+                        <span>IV. Arrays & Matrizes</span>
+                        <i class="fa-solid fa-chevron-right opacity-0 group-hover:opacity-100 transition-opacity text-anime-cyan text-xs"></i>
+                    </button>
+                    <button onclick="showModule(5)" id="btn-mod-5" class="w-full text-left px-4 py-3 rounded-lg border border-transparent hover:bg-gray-800/50 hover:text-white transition-all text-gray-400 flex justify-between items-center group">
+                        <span>V. Funções & Ordenação</span>
+                        <i class="fa-solid fa-chevron-right opacity-0 group-hover:opacity-100 transition-opacity text-anime-cyan text-xs"></i>
+                    </button>
+                    <button onclick="showModule(6)" id="btn-mod-6" class="w-full text-left px-4 py-3 rounded-lg border border-transparent hover:bg-gray-800/50 hover:text-white transition-all text-gray-400 flex justify-between items-center group">
+                        <span>VI. Depuração & Teste</span>
+                        <i class="fa-solid fa-chevron-right opacity-0 group-hover:opacity-100 transition-opacity text-anime-cyan text-xs"></i>
+                    </button>
+                </nav>
+            </div>
+        </aside>
+
+        <div class="flex-grow w-full pb-20">
+            
+            <!-- MODULE 1 -->
+            <section id="module-0" class="module-section hidden animate-fade-in">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-display font-bold text-white mb-2 flex items-center">
+                        <span class="text-anime-cyan mr-3">00.</span> Algoritmos e Fluxogramas
+                    </h2>
+                    <p class="text-gray-400 max-w-2xl">Antes do código: pense em entrada, processamento e saída. Pseudocódigo e fluxogramas como primeiro passo.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Exercise 0.1 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-emerald-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-emerald-500/5 blur-3xl rounded-full group-hover:bg-emerald-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-rpg">Tema: RPG 3D&amp;T</span>
+                            <span class="text-gray-600 text-sm font-display">EX-0.1</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Exame do Aprendiz</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Algoritmo clássico da apostila: leia duas notas de um aprendiz de mago, calcule a <code>media</code> e informe "Aprovado" se a média for maior ou igual a 6, ou "Reprovado" caso contrário.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 0.2 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-amber-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-amber-500/5 blur-3xl rounded-full group-hover:bg-amber-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-logistics">Tema: Logística Militar</span>
+                            <span class="text-gray-600 text-sm font-display">EX-0.2</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Nota Fiscal do Quartel</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Leia o <code>preco</code> de um item e a <code>quantidade</code> comprada, calcule o total a pagar e exiba o resultado. Um algoritmo de entrada → processamento → saída.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 0.3 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-fuchsia-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-fuchsia-500/5 blur-3xl rounded-full group-hover:bg-fuchsia-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-hacker">Tema: Hacker</span>
+                            <span class="text-gray-600 text-sm font-display">EX-0.3</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Scanner de Sinal</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Traduza o fluxograma em código: Terminal (início) → Entrada (ler número) → Decisão <em>número &gt; 0?</em> → se não, Decisão <em>número &lt; 0?</em> → Saída (Positivo, Negativo ou Zero) → Terminal (fim).
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="module-1" class="module-section animate-fade-in">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-display font-bold text-white mb-2 flex items-center">
+                        <span class="text-anime-cyan mr-3">01.</span> Variáveis, Tipos e Operadores
+                    </h2>
+                    <p class="text-gray-400 max-w-2xl">Fundamentos do processamento de dados. Declare, manipule e realize operações matemáticas e lógicas básicas.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Exercise 1.1 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-gray-600 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-gray-500/5 blur-3xl rounded-full group-hover:bg-gray-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-noir">Tema: Detetive Noir</span>
+                            <span class="text-gray-600 text-sm font-display">EX-1.1</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">O Álibi Perfeito?</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Crie um algoritmo que registre a hora de um assassinato, a hora do álibi de um suspeito e a distância em quilômetros entre a cena do crime e o local do álibi. Calcule a velocidade média necessária para o deslocamento e retorne <code>True</code> se for fisicamente possível o suspeito ter cometido o crime.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 1.2 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-red-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-red-500/5 blur-3xl rounded-full group-hover:bg-red-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-marvel">Tema: Marvel</span>
+                            <span class="text-gray-600 text-sm font-display">EX-1.2</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Falha no Reator Arc</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            O reator Arc de Tony Stark está danificado. Declare variáveis para a <code>energia_atual</code> (em porcentagem) e a <code>taxa_consumo_por_minuto</code>. Escreva a expressão matemática que calcule e exiba quantos minutos exatos de voo restam antes da armadura desligar completamente.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 1.3 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-emerald-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-emerald-500/5 blur-3xl rounded-full group-hover:bg-emerald-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-rpg">Tema: RPG 3D&amp;T</span>
+                            <span class="text-gray-600 text-sm font-display">EX-1.3</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Magia de Autocura</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Defina as variáveis de <code>pontos_de_vida</code> e <code>pontos_de_magia</code> de um clérigo. Crie uma expressão lógica composta que retorne <code>True</code> apenas se ele tiver mais de 10 pontos de magia <strong>E</strong> menos de 50% dos pontos de vida totais, autorizando o uso de uma magia de autocura.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 1.4 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-amber-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-amber-500/5 blur-3xl rounded-full group-hover:bg-amber-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-logistics">Tema: Logística Militar</span>
+                            <span class="text-gray-600 text-sm font-display">EX-1.4</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Suprimentos do Pelotão</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Modele a carga de suprimentos de um pelotão. Receba o número de soldados, a duração da missão em dias e o peso diário de ração por combatente. Calcule o peso total da carga e verifique com um operador relacional se ultrapassa a capacidade de transporte de um caminhão padrão (5.000 kg).
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+                
+                    <!-- Exercise 1.5 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-teal-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-teal-500/5 blur-3xl rounded-full group-hover:bg-teal-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-zombie">Tema: Apocalipse Zumbi</span>
+                            <span class="text-gray-600 text-sm font-display">EX-1.5</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Divisão de Equipes</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Dividir sobreviventes em duas equipes exige o operador <code>%</code> (módulo). Se o resto da divisão por 2 for 0, as equipes ficam iguais; senão, sobra um sobrevivente. Use 7 sobreviventes.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 1.6 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-blue-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-blue-500/5 blur-3xl rounded-full group-hover:bg-blue-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-monica">Tema: Seminário de técnologia</span>
+                            <span class="text-gray-600 text-sm font-display">EX-1.6</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Crachá de Seminário</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Leia o nome e a idade de uma pessoa e exiba <em>Olá, [nome]! Você tem [idade] anos.</em> Lembre-se: a entrada sempre chega como texto, então a idade precisa de uma conversão para <strong>inteiro</strong>.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="module-2" class="module-section hidden animate-fade-in">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-display font-bold text-white mb-2 flex items-center">
+                        <span class="text-anime-cyan mr-3">02.</span> Estruturas Condicionais (If/Else)
+                    </h2>
+                    <p class="text-gray-400 max-w-2xl">O controle de fluxo do seu programa. Tome decisões baseadas em condições lógicas simples e encadeadas.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Exercise 2.1 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-red-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-red-500/5 blur-3xl rounded-full group-hover:bg-red-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-marvel">Tema: Marvel</span>
+                            <span class="text-gray-600 text-sm font-display">EX-2.1</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Protocolo J.A.R.V.I.S.</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            J.A.R.V.I.S. está filtrando o acesso à Torre dos Vingadores. Se a credencial for "Stark" ou "Rogers", os portões se abrem. Se a credencial for "Banner", o sistema verifica uma segunda variável <code>batimentos_cardiacos</code>; se for maior que 120, bloqueia as portas de adamantium. Escreva este fluxo.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 2.2 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-blue-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-blue-500/5 blur-3xl rounded-full group-hover:bg-blue-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-monica">Tema: Turma da Mônica</span>
+                            <span class="text-gray-600 text-sm font-display">EX-2.2</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">A Balança IA da Farmácia</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            A balança possui inteligência artificial. Se a variável <code>usuario_atual</code> for "Cebolinha", o algoritmo deve subtrair secretamente 10 kg do resultado impresso para evitar que a Mônica arremesse o Sansão nele. Para qualquer outro usuário, exibe o peso real. Estruture essa condição.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 2.3 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-orange-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-orange-500/5 blur-3xl rounded-full group-hover:bg-orange-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-tolkien">Tema: Tolkien</span>
+                            <span class="text-gray-600 text-sm font-display">EX-2.3</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">O Porteiro de Bri</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            O porteiro de Bri analisa viajantes na chuva. Se a raça for "Hobbit", ele abre a porta imediatamente. Se for "Homem", ele exige o pagamento de 1 moeda de prata. Se for "Nazgûl", ele aciona o alarme. Desenhe este algoritmo com condicionais encadeadas.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 2.4 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-gray-600 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-gray-500/5 blur-3xl rounded-full group-hover:bg-gray-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-noir">Tema: Detetive Noir</span>
+                            <span class="text-gray-600 text-sm font-display">EX-2.4</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Cruzamento de Evidências</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Interrogatório. O algoritmo deve cruzar duas declarações: <code>arma_encontrada</code> (revólver) e <code>causa_mortis</code> (envenenamento). Se os dados não baterem, o status do suspeito muda de "Testemunha" para "Principal Suspeito". Modele o código.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+                
+                    <!-- Exercise 2.5 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-emerald-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-emerald-500/5 blur-3xl rounded-full group-hover:bg-emerald-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-rpg">Tema: RPG 3D&amp;T</span>
+                            <span class="text-gray-600 text-sm font-display">EX-2.5</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Ranking da Guilda</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Classifique a nota de um aventureiro (7.5) em conceitos: A (≥ 9), B (≥ 7), C (≥ 5) ou D. Atenção: a ordem das condições importa — as mais restritivas vêm primeiro!
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 2.6 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-gray-600 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-gray-500/5 blur-3xl rounded-full group-hover:bg-gray-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-noir">Tema: Detetive Noir</span>
+                            <span class="text-gray-600 text-sm font-display">EX-2.6</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Porta do Cassino</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Condicionais aninhadas: primeiro verifique se a pessoa é maior de idade; só então verifique se tem documento. Maior com documento entra; maior sem documento deve apresentá-lo; menor é barrado.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="module-3" class="module-section hidden animate-fade-in">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-display font-bold text-white mb-2 flex items-center">
+                        <span class="text-anime-cyan mr-3">03.</span> Estruturas de Repetição
+                    </h2>
+                    <p class="text-gray-400 max-w-2xl">Automação de tarefas repetitivas. Domine laços While e For para processamento contínuo de dados.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Exercise 3.1 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-lime-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-lime-500/5 blur-3xl rounded-full group-hover:bg-lime-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-yoshi">Tema: Yoshi's Island</span>
+                            <span class="text-gray-600 text-sm font-display">EX-3.1</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Bolha do Baby Mario</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            O Baby Mario está em uma bolha. Crie um laço <code>While</code> que faça um contador regressivo de 10 até 0. A cada iteração, imprima "Choro irritante!". Se o Yoshi não estourar a bolha antes do 0, execute a rotina de captura pelos capangas do Kamek.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 3.2 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-emerald-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-emerald-500/5 blur-3xl rounded-full group-hover:bg-emerald-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-rpg">Tema: RPG 3D&amp;T</span>
+                            <span class="text-gray-600 text-sm font-display">EX-3.2</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Dano de Veneno (DoT)</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Seu guerreiro foi envenenado. Utilize um laço <code>For</code> para simular 5 turnos de combate. A cada turno percorrido, subtraia 3 pontos da vitalidade do personagem e exiba o status atualizado na tela.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 3.3 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-red-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-red-500/5 blur-3xl rounded-full group-hover:bg-red-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-marvel">Tema: Marvel</span>
+                            <span class="text-gray-600 text-sm font-display">EX-3.3</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Controle da Raiva</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            O Hulk está lutando contra uma horda infinita de robôs de Ultron. Crie um laço <code>While</code> onde a condição de parada seja <code>nivel_de_raiva < 20</code>. A cada robô destruído (uma iteração do loop), o nível de raiva diminui em 5.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 3.4 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-pink-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-pink-500/5 blur-3xl rounded-full group-hover:bg-pink-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-investigation">Tema: Investigação</span>
+                            <span class="text-gray-600 text-sm font-display">EX-3.4</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Molho de Chaves</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            O detetive tem um molho com 50 chaves para abrir um cofre. Use um laço <code>For</code> para iterar sobre cada chave. A cada tentativa, há 2% de chance de a chave funcionar. Quando a porta abrir, interrompa o laço (usando a instrução <code>break</code>) e exiba quantas tentativas foram necessárias.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+                
+                    <!-- Exercise 3.5 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-fuchsia-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-fuchsia-500/5 blur-3xl rounded-full group-hover:bg-fuchsia-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-hacker">Tema: Hacker</span>
+                            <span class="text-gray-600 text-sm font-display">EX-3.5</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Quebra de Firewall</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Simule um <em>do-while</em>: peça a senha ao menos uma vez e repita até acertar ("1234"). Use <code>enquanto (True)</code> com <code>break</code>. Ao sair, exiba "Acesso liberado!".
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 3.6 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-amber-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-amber-500/5 blur-3xl rounded-full group-hover:bg-amber-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-tolkien">Tema: Tolkien</span>
+                            <span class="text-gray-600 text-sm font-display">EX-3.6</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Tesouro de Erebor</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Some as moedas digitadas pelo anão contador até que ele digite 0. O laço só deve rodar enquanto o valor lido for diferente de 0, e o valor deve ser relido a cada volta.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="module-4" class="module-section hidden animate-fade-in">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-display font-bold text-white mb-2 flex items-center">
+                        <span class="text-anime-cyan mr-3">04.</span> Vetores e Matrizes (Arrays)
+                    </h2>
+                    <p class="text-gray-400 max-w-2xl">Organização de dados em coleções. Aprenda a armazenar, acessar e manipular múltiplos valores em estruturas dimensionais.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Exercise 4.1 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-red-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-red-500/5 blur-3xl rounded-full group-hover:bg-red-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-marvel">Tema: Marvel</span>
+                            <span class="text-gray-600 text-sm font-display">EX-4.1</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">A Manopla do Infinito</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            A Manopla do Infinito é um vetor de 6 posições, inicialmente preenchido com valores nulos. Escreva um algoritmo que adicione as 6 joias em suas respectivas posições cronológicas de aquisição no cinema. No final, verifique se o índice 3 contém a "Joia da Alma".
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 4.2 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-indigo-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-indigo-500/5 blur-3xl rounded-full group-hover:bg-indigo-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-battalion">Tema: Batalhão</span>
+                            <span class="text-gray-600 text-sm font-display">EX-4.2</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Reconhecimento Terrestre</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            O mapa de uma missão de reconhecimento é uma matriz 4x4. O valor 0 representa terreno limpo e 1 representa campo minado. Escreva um algoritmo que percorra a primeira coluna inteira (índice <code>[linha][0]</code>) verificando se é seguro o comboio avançar por ali.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 4.3 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-lime-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-lime-500/5 blur-3xl rounded-full group-hover:bg-lime-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-yoshi">Tema: Yoshi's Island</span>
+                            <span class="text-gray-600 text-sm font-display">EX-4.3</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Inventário de Ovos</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            O inventário de ovos do Yoshi é um vetor de 6 posições, preenchido com as cores: ["Verde", "Vermelho", "Amarelo", "Verde", "Verde", "Vermelho"]. Crie um algoritmo que percorra o vetor e conte exatamente quantos ovos vermelhos estão disponíveis para disparar.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 4.4 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-gray-600 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-gray-500/5 blur-3xl rounded-full group-hover:bg-gray-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-noir">Tema: Detetive Noir</span>
+                            <span class="text-gray-600 text-sm font-display">EX-4.4</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Quadro de Evidências</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            O quadro de evidências da delegacia é um vetor de strings contendo os nomes dos suspeitos. Uma nova prova inocentou o suspeito armazenado no índice 2. Escreva o comando lógico para remover esse suspeito específico e reorganizar a lista.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 4.5 -->
+                    <div class="md:col-span-2 bg-anime-panel/80 border border-gray-800 hover:border-teal-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-teal-500/5 blur-3xl rounded-full group-hover:bg-teal-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-zombie">Tema: Sobrevivência Zumbi</span>
+                            <span class="text-gray-600 text-sm font-display">EX-4.5</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">O Inventário do Sobrevivente</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            O vetor <code>inventario_durabilidade = [12, 85, 0, 45, 0, 99, 10]</code> representa a durabilidade das armas do jogador (0 a 100%). Escreva um algoritmo com um laço de repetição que percorra todo o vetor: se a durabilidade for <code>0</code>, imprima "Arma Descartada"; se for menor que 20 (mas maior que 0), imprima "Alerta: Arma quase quebrando!".
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+                
+                    <!-- Exercise 4.6 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-lime-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-lime-500/5 blur-3xl rounded-full group-hover:bg-lime-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-yoshi">Tema: Yoshi</span>
+                            <span class="text-gray-600 text-sm font-display">EX-4.6</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Peso Médio dos Ovos</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Dado o vetor <code>pesos = [7.5, 8.0, 6.5, 9.0, 5.5]</code>, percorra-o com um acumulador para somar todos os pesos e depois divida pela quantidade de elementos.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 4.7 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-red-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-red-500/5 blur-3xl rounded-full group-hover:bg-red-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-marvel">Tema: Marvel</span>
+                            <span class="text-gray-600 text-sm font-display">EX-4.7</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Sensores da Torre Stark</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Uma matriz 3x3 guarda as leituras dos sensores. Use laços aninhados (um para cada linha, outro para cada valor da linha) e um acumulador para somar todas as leituras.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="module-5" class="module-section hidden animate-fade-in">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-display font-bold text-white mb-2 flex items-center">
+                        <span class="text-anime-cyan mr-3">05.</span> Funções, Modularização e Ordenação
+                    </h2>
+                    <p class="text-gray-400 max-w-2xl">Arquitetura de código escalável. Divida problemas complexos em blocos menores reutilizáveis e implemente algoritmos de ordenação clássicos.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Exercise 5.1 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-emerald-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-emerald-500/5 blur-3xl rounded-full group-hover:bg-emerald-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-rpg">Tema: RPG 3D&amp;T</span>
+                            <span class="text-gray-600 text-sm font-display">EX-5.1</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Cálculo Físico de Dano</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Crie uma função chamada <code>calcular_dano_ataque(forca, habilidade, armadura_alvo)</code>. A função deve somar os atributos ofensivos, subtrair a armadura do alvo e garantir que o dano nunca seja um número negativo antes de retornar (<code>return</code>) o valor final.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 5.2 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-red-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-red-500/5 blur-3xl rounded-full group-hover:bg-red-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-marvel">Tema: Marvel</span>
+                            <span class="text-gray-600 text-sm font-display">EX-5.2</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Defesa de Wakanda</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Modularize a defesa de Wakanda. Crie uma função <code>ativar_escudos(setor)</code> que receba o número de um setor do país. Dentro da função, crie uma lógica que verifique a energia local e retorne um status de "Escudos Operacionais" ou "Falha Crítica".
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 5.3 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-gray-600 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-gray-500/5 blur-3xl rounded-full group-hover:bg-gray-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-noir">Tema: Detetive Noir</span>
+                            <span class="text-gray-600 text-sm font-display">EX-5.3</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Análise de Polígrafo</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Crie uma função de ordenação rápida (inspirada no Quick Sort). Ela deve receber um vetor com o nível de estresse (de 1 a 100) de 5 suspeitos durante o polígrafo. A função deve retornar o vetor ordenado do mais estressado para o menos estressado.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 5.4 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-orange-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-orange-500/5 blur-3xl rounded-full group-hover:bg-orange-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-tolkien">Tema: Tolkien</span>
+                            <span class="text-gray-600 text-sm font-display">EX-5.4</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">A Forja dos Anéis</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Elabore uma função chamada <code>forjar_anel(raca_destinataria)</code>. Se o argumento passado for "Elfos", retorne a string "3 anéis forjados". Se for "Anões", retorne "7 anéis". Se for "Homens", retorne "9 anéis". O programa principal deve chamar essa função três vezes consecutivas e somar os resultados.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 5.5 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-fuchsia-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-fuchsia-500/5 blur-3xl rounded-full group-hover:bg-fuchsia-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-hacker">Tema: Hacker / API</span>
+                            <span class="text-gray-600 text-sm font-display">EX-5.5</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">O Assalto ao Banco de Dados</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Você precisa validar um cartão de acesso antes de abrir o cofre e já tem a função local <code>ler_cartao(leitor)</code>, que retorna um código de barras. Crie a função <code>tentar_abrir_cofre()</code> que: 1) chame <code>ler_cartao(leitor)</code>; 2) simule uma chamada de API enviando o código para <code>"https://api.bancocentral.com/validar"</code>; 3) use uma condicional — se a API retornar <code>True</code>, imprima "Acesso Concedido"; se retornar <code>False</code>, chame <code>soar_alarme()</code>.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 5.6 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-yellow-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-yellow-500/5 blur-3xl rounded-full group-hover:bg-yellow-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-rpg">Tema: RPG 3D&amp;T</span>
+                            <span class="text-gray-600 text-sm font-display">EX-5.6</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Ordenação Caótica</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Um dragão derrotado deixou cair o vetor <code>saque = [500, 10, 1500, 50]</code> (valores em moedas de ouro). Sem usar funções nativas de ordenação (como <code>saque.sort()</code>), escreva um algoritmo inspirado no <em>Bubble Sort</em> que troque de lugar o valor 500 com o 1500, garantindo que o maior valor fique no índice 0. Lembre-se: para trocar o conteúdo de duas variáveis, geralmente é preciso uma variável temporária.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+                
+                    <!-- Exercise 5.7 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-indigo-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-indigo-500/5 blur-3xl rounded-full group-hover:bg-indigo-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-battalion">Tema: Batalhão</span>
+                            <span class="text-gray-600 text-sm font-display">EX-5.7</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Área do Acampamento</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Crie uma função <code>calcular_area_retangulo(base, altura)</code> que <strong>retorne</strong> a área, e depois chame-a com base 5 e altura 3 para exibir o resultado.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 5.8 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-pink-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-pink-500/5 blur-3xl rounded-full group-hover:bg-pink-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-investigation">Tema: Investigação</span>
+                            <span class="text-gray-600 text-sm font-display">EX-5.8</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Ficha do Suspeito</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Escreva a função <code>valida_idade(idade)</code>, que aceita valores de 0 a 120 (inclusive), e use-a em um laço que repete a pergunta até o usuário digitar uma idade válida.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="module-6" class="module-section hidden animate-fade-in">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-display font-bold text-white mb-2 flex items-center">
+                        <span class="text-anime-cyan mr-3">06.</span> Depuração e Teste de Mesa
+                    </h2>
+                    <p class="text-gray-400 max-w-2xl">Simule o algoritmo no papel, acompanhe cada variável e encontre o erro antes do computador.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Exercise 6.1 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-fuchsia-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-fuchsia-500/5 blur-3xl rounded-full group-hover:bg-fuchsia-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-hacker">Tema: Hacker</span>
+                            <span class="text-gray-600 text-sm font-display">EX-6.1</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Cofre Fatorial</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            O código do cofre é o fatorial de 4. Monte o algoritmo e depois faça o <strong>teste de mesa</strong> no papel: o valor final impresso deve ser 24.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+
+                    <!-- Exercise 6.2 -->
+                    <div class="bg-anime-panel/80 border border-gray-800 hover:border-teal-900/50 rounded-xl p-6 relative overflow-hidden group clip-diagonal cursor-pointer transition-all hover:-translate-y-1" tabindex="0" role="button" aria-haspopup="dialog" onclick="openExercise(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openExercise(this);}">
+                        <div class="absolute -right-16 -top-16 w-32 h-32 bg-teal-500/5 blur-3xl rounded-full group-hover:bg-teal-500/20 transition-all"></div>
+                        <div class="flex justify-between items-start mb-4 relative z-10">
+                            <span class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border tag-zombie">Tema: Apocalipse Zumbi</span>
+                            <span class="text-gray-600 text-sm font-display">EX-6.2</span>
+                        </div>
+                        <h3 class="text-lg font-display text-white mb-3 relative z-10">Contagem de Munição</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed relative z-10">
+                            Some os números de 1 a 3 com um laço <code>para</code>. Faça o teste de mesa registrando <code>i</code> e <code>soma</code> a cada volta — o valor final impresso será 6.
+                        </p>
+                        <p class="mt-4 pt-3 border-t border-gray-800/70 text-anime-cyan text-xs font-display uppercase tracking-wider flex items-center gap-2 relative z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                            <i class="fa-solid fa-pen-to-square"></i> Clique para responder
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Exercise Modal -->
+    <div id="exercise-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div id="modal-backdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+        <div class="relative bg-anime-panel border border-gray-700 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto clip-diagonal">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-anime-cyan via-anime-purple to-anime-pink"></div>
+            <div class="p-6 sm:p-8">
+                <div class="flex justify-between items-start mb-4">
+                    <span id="modal-tag" class="px-2 py-1 text-xs font-bold uppercase tracking-wider rounded border"></span>
+                    <div class="flex items-center gap-4">
+                        <span id="modal-complete-badge" class="hidden text-emerald-400 text-lg"><i class="fa-solid fa-circle-check"></i></span>
+                        <span id="modal-id" class="text-gray-500 text-sm font-display"></span>
+                        <button onclick="closeExercise()" aria-label="Fechar" class="text-gray-500 hover:text-anime-pink transition-colors text-xl leading-none">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+                <h3 id="modal-title" class="text-2xl font-display font-bold text-white mb-4"></h3>
+                <p id="modal-desc" class="text-gray-300 text-sm leading-relaxed mb-6"></p>
+
+                <label class="block text-xs font-display uppercase tracking-widest text-anime-cyan mb-2">
+                    <i class="fa-solid fa-puzzle-piece mr-1"></i> Monte o algoritmo na ordem certa
+                </label>
+                <div id="modal-puzzle-slots" class="space-y-2 mb-5"></div>
+
+                <label class="block text-xs font-display uppercase tracking-widest text-gray-500 mb-2">
+                    Peças disponíveis <span class="normal-case font-sans">(toque para encaixar — há peças extras de pegadinha)</span>
+                </label>
+                <div id="modal-puzzle-bank" class="flex flex-wrap gap-2 mb-5 min-h-[3rem]"></div>
+
+                <div class="flex justify-between items-center gap-3 flex-wrap">
+                    <span id="modal-feedback" class="text-sm font-display flex-1 min-w-[10rem]"></span>
+                    <div class="flex gap-2">
+                        <button onclick="resetPuzzle()" class="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm font-display uppercase tracking-wider transition-colors">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Reiniciar
+                        </button>
+                        <button onclick="checkPuzzle()" class="px-5 py-2 rounded-lg bg-anime-cyan hover:brightness-110 text-anime-dark text-sm font-display font-bold uppercase tracking-wider transition-all">
+                            Verificar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-t border-gray-800 mt-auto bg-anime-panel relative z-10">
+        <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+            <p><i class="fa-solid fa-terminal mr-2"></i> Sistema Ativo // Status: Online</p>
+            <p class="mt-2 md:mt-0 font-display tracking-widest text-xs">LOGIC ACADEMY © 2026</p>
+        </div>
+    </footer>
+
+    <script>
+        function showModule(moduleId) {
+            // Hide all modules
+            document.querySelectorAll('.module-section').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('animate-fade-in');
+            });
+            
+            // Remove active state from all buttons
+            document.querySelectorAll('#module-nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+            });
+            
+            // Show selected module and set active state
+            const targetModule = document.getElementById(`module-${moduleId}`);
+            targetModule.classList.remove('hidden');
+            // Trigger reflow to restart animation
+            void targetModule.offsetWidth; 
+            targetModule.classList.add('animate-fade-in');
+            
+            document.getElementById(`btn-mod-${moduleId}`).classList.add('tab-active');
+        }
+
+        // ---- Banco de soluções dos quebra-cabeças (peças corretas + peças "pegadinha") ----
+        const PUZZLES = {
+            "EX-1.1": {
+                blocks: [
+                    "hora_crime = 22",
+                    "hora_alibi = 22.5",
+                    "distancia_km = 15",
+                    "tempo_disponivel = hora_alibi - hora_crime",
+                    "velocidade_necessaria = distancia_km / tempo_disponivel",
+                    "possivel = velocidade_necessaria <= 120",
+                    "retornar possivel"
+                ],
+                distractors: ["velocidade_necessaria = distancia_km * tempo_disponivel", "retornar hora_crime"]
+            },
+            "EX-1.2": {
+                blocks: [
+                    "energia_atual = 35",
+                    "taxa_consumo_por_minuto = 2.5",
+                    "minutos_restantes = energia_atual / taxa_consumo_por_minuto",
+                    "imprimir(minutos_restantes)"
+                ],
+                distractors: ["minutos_restantes = energia_atual * taxa_consumo_por_minuto", "imprimir(taxa_consumo_por_minuto)"]
+            },
+            "EX-1.3": {
+                blocks: [
+                    "pontos_de_vida = 40",
+                    "pontos_de_vida_maximo = 100",
+                    "pontos_de_magia = 15",
+                    "pode_curar = (pontos_de_magia > 10) E (pontos_de_vida < pontos_de_vida_maximo * 0.5)",
+                    "retornar pode_curar"
+                ],
+                distractors: ["pode_curar = (pontos_de_magia > 10) OU (pontos_de_vida < 50)", "retornar pontos_de_magia"]
+            },
+            "EX-1.4": {
+                blocks: [
+                    "numero_soldados = 40",
+                    "dias_missao = 10",
+                    "peso_racao_dia = 2",
+                    "peso_total = numero_soldados * dias_missao * peso_racao_dia",
+                    "excede_limite = peso_total > 5000",
+                    "retornar excede_limite"
+                ],
+                distractors: ["peso_total = numero_soldados + dias_missao + peso_racao_dia", "excede_limite = peso_total < 5000"]
+            },
+            "EX-2.1": {
+                blocks: [
+                    "se (credencial == \"Stark\") OU (credencial == \"Rogers\"):",
+                    "    abrir_portoes()",
+                    "senao se (credencial == \"Banner\"):",
+                    "    se (batimentos_cardiacos > 120):",
+                    "        bloquear_portas()",
+                    "    senao:",
+                    "        abrir_portoes()",
+                    "senao:",
+                    "    negar_acesso()"
+                ],
+                distractors: ["se (credencial == \"Banner\") E (credencial == \"Stark\"):", "    negar_acesso() # sempre bloqueia"]
+            },
+            "EX-2.2": {
+                blocks: [
+                    "peso_real = medir_peso()",
+                    "se (usuario_atual == \"Cebolinha\"):",
+                    "    peso_exibido = peso_real - 10",
+                    "senao:",
+                    "    peso_exibido = peso_real",
+                    "imprimir(peso_exibido)"
+                ],
+                distractors: ["peso_exibido = peso_real + 10", "se (usuario_atual == \"Monica\"):"]
+            },
+            "EX-2.3": {
+                blocks: [
+                    "se (raca == \"Hobbit\"):",
+                    "    abrir_porta()",
+                    "senao se (raca == \"Homem\"):",
+                    "    cobrar_pagamento(1)",
+                    "senao se (raca == \"Nazgul\"):",
+                    "    acionar_alarme()",
+                    "senao:",
+                    "    negar_entrada()"
+                ],
+                distractors: ["senao se (raca == \"Elfo\"):", "    cobrar_pagamento(10)"]
+            },
+            "EX-2.4": {
+                blocks: [
+                    "arma_encontrada = \"revolver\"",
+                    "causa_mortis = \"envenenamento\"",
+                    "dados_batem = (arma_encontrada == causa_mortis)",
+                    "se (dados_batem == False):",
+                    "    status_suspeito = \"Principal Suspeito\"",
+                    "senao:",
+                    "    status_suspeito = \"Testemunha\"",
+                    "imprimir(status_suspeito)"
+                ],
+                distractors: ["dados_batem = (arma_encontrada != causa_mortis)", "status_suspeito = \"Culpado\""]
+            },
+            "EX-3.1": {
+                blocks: [
+                    "contador = 10",
+                    "enquanto (contador > 0):",
+                    "    imprimir(\"Choro irritante!\")",
+                    "    contador = contador - 1",
+                    "se (contador == 0):",
+                    "    capturar_baby_mario()"
+                ],
+                distractors: ["contador = contador + 1", "enquanto (contador < 0):"]
+            },
+            "EX-3.2": {
+                blocks: [
+                    "vitalidade = 100",
+                    "para turno de 1 ate 5:",
+                    "    vitalidade = vitalidade - 3",
+                    "    imprimir(vitalidade)"
+                ],
+                distractors: ["vitalidade = vitalidade + 3", "para turno de 1 ate 3:"]
+            },
+            "EX-3.3": {
+                blocks: [
+                    "nivel_de_raiva = 100",
+                    "enquanto (nivel_de_raiva >= 20):",
+                    "    destruir_robo()",
+                    "    nivel_de_raiva = nivel_de_raiva - 5"
+                ],
+                distractors: ["nivel_de_raiva = nivel_de_raiva + 5", "enquanto (nivel_de_raiva < 20):"]
+            },
+            "EX-3.4": {
+                blocks: [
+                    "tentativas = 0",
+                    "para cada chave de 1 ate 50:",
+                    "    tentativas = tentativas + 1",
+                    "    se (chave_funciona()):",
+                    "        break",
+                    "imprimir(tentativas)"
+                ],
+                distractors: ["tentativas = tentativas - 1", "        continue"]
+            },
+            "EX-4.1": {
+                blocks: [
+                    "joias = [None, None, None, None, None, None]",
+                    "joias[0] = \"Espaco\"",
+                    "joias[1] = \"Mente\"",
+                    "joias[2] = \"Realidade\"",
+                    "joias[3] = \"Alma\"",
+                    "joias[4] = \"Poder\"",
+                    "joias[5] = \"Tempo\"",
+                    "se (joias[3] == \"Alma\"):",
+                    "    imprimir(\"Confirmado\")"
+                ],
+                distractors: ["joias[3] = \"Poder\"", "se (joias[0] == \"Alma\"):"]
+            },
+            "EX-4.2": {
+                blocks: [
+                    "mapa = criar_matriz(4, 4)",
+                    "seguro = True",
+                    "para linha de 0 ate 3:",
+                    "    se (mapa[linha][0] == 1):",
+                    "        seguro = False",
+                    "imprimir(seguro)"
+                ],
+                distractors: ["se (mapa[0][linha] == 1):", "seguro = mapa[linha][0]"]
+            },
+            "EX-4.3": {
+                blocks: [
+                    "ovos = [\"Verde\", \"Vermelho\", \"Amarelo\", \"Verde\", \"Verde\", \"Vermelho\"]",
+                    "contador_vermelhos = 0",
+                    "para cada ovo em ovos:",
+                    "    se (ovo == \"Vermelho\"):",
+                    "        contador_vermelhos = contador_vermelhos + 1",
+                    "imprimir(contador_vermelhos)"
+                ],
+                distractors: ["contador_vermelhos = contador_vermelhos - 1", "    se (ovo == \"Verde\"):"]
+            },
+            "EX-4.4": {
+                blocks: [
+                    "suspeitos = [\"Ana\", \"Bruno\", \"Carla\", \"Diego\"]",
+                    "remover_indice(suspeitos, 2)",
+                    "imprimir(suspeitos)"
+                ],
+                distractors: ["remover_indice(suspeitos, 0)", "suspeitos[2] = \"Novo\""]
+            },
+            "EX-4.5": {
+                blocks: [
+                    "inventario_durabilidade = [12, 85, 0, 45, 0, 99, 10]",
+                    "para cada durabilidade em inventario_durabilidade:",
+                    "    se (durabilidade == 0):",
+                    "        imprimir(\"Arma Descartada\")",
+                    "    senao se (durabilidade < 20):",
+                    "        imprimir(\"Alerta: Arma quase quebrando!\")"
+                ],
+                distractors: ["senao se (durabilidade > 20):", "        imprimir(\"Arma Nova\")"]
+            },
+            "EX-5.1": {
+                blocks: [
+                    "funcao calcular_dano_ataque(forca, habilidade, armadura_alvo):",
+                    "    dano = (forca + habilidade) - armadura_alvo",
+                    "    se (dano < 0):",
+                    "        dano = 0",
+                    "    retornar dano"
+                ],
+                distractors: ["    dano = (forca + habilidade) + armadura_alvo", "    retornar armadura_alvo"]
+            },
+            "EX-5.2": {
+                blocks: [
+                    "funcao ativar_escudos(setor):",
+                    "    energia_local = verificar_energia(setor)",
+                    "    se (energia_local > 0):",
+                    "        retornar \"Escudos Operacionais\"",
+                    "    senao:",
+                    "        retornar \"Falha Critica\""
+                ],
+                distractors: ["    se (energia_local == 0):", "    retornar setor"]
+            },
+            "EX-5.3": {
+                blocks: [
+                    "funcao ordenar_por_estresse(niveis):",
+                    "    se (tamanho(niveis) <= 1):",
+                    "        retornar niveis",
+                    "    pivo = niveis[0]",
+                    "    maiores = filtrar(niveis, maior_que(pivo))",
+                    "    menores = filtrar(niveis, menor_que(pivo))",
+                    "    retornar concatenar(ordenar_por_estresse(maiores), [pivo], ordenar_por_estresse(menores))"
+                ],
+                distractors: ["    pivo = niveis[tamanho(niveis) - 1]", "    retornar concatenar(ordenar_por_estresse(menores), [pivo], ordenar_por_estresse(maiores))"]
+            },
+            "EX-5.4": {
+                blocks: [
+                    "funcao forjar_anel(raca_destinataria):",
+                    "    se (raca_destinataria == \"Elfos\"):",
+                    "        retornar \"3 aneis forjados\"",
+                    "    senao se (raca_destinataria == \"Anoes\"):",
+                    "        retornar \"7 aneis\"",
+                    "    senao se (raca_destinataria == \"Homens\"):",
+                    "        retornar \"9 aneis\"",
+                    "total = forjar_anel(\"Elfos\") + forjar_anel(\"Anoes\") + forjar_anel(\"Homens\")"
+                ],
+                distractors: ["    senao se (raca_destinataria == \"Orcs\"):", "total = forjar_anel(\"Elfos\")"]
+            },
+            "EX-5.5": {
+                blocks: [
+                    "funcao tentar_abrir_cofre():",
+                    "    codigo = ler_cartao(leitor)",
+                    "    resposta = chamar_api(\"https://api.bancocentral.com/validar\", codigo)",
+                    "    se (resposta == True):",
+                    "        imprimir(\"Acesso Concedido\")",
+                    "    senao:",
+                    "        soar_alarme()"
+                ],
+                distractors: ["    resposta = ler_cartao(leitor)", "        imprimir(\"Acesso Concedido\") # mesmo sem validar"]
+            },
+            "EX-5.6": {
+                blocks: [
+                    "saque = [500, 10, 1500, 50]",
+                    "temp = saque[0]",
+                    "saque[0] = saque[2]",
+                    "saque[2] = temp",
+                    "imprimir(saque)"
+                ],
+                distractors: ["saque[0] = temp", "temp = saque[2]"]
+            },
+            "EX-0.1": {
+                blocks: ["nota1 = ler(\"Nota 1: \")", "nota2 = ler(\"Nota 2: \")", "media = (nota1 + nota2) / 2", "se (media >= 6):", "    imprimir(\"Aprovado\")", "senao:", "    imprimir(\"Reprovado\")"],
+                distractors: ["media = nota1 + nota2 / 2", "se (media <= 6):"]
+            },
+            "EX-0.2": {
+                blocks: ["preco = ler(\"Preço: \")", "quantidade = ler(\"Quantidade: \")", "total = preco * quantidade", "imprimir(\"O total a pagar é: \", total)"],
+                distractors: ["total = preco + quantidade", "imprimir(preco)"]
+            },
+            "EX-0.3": {
+                blocks: ["numero = ler(\"Sinal: \")", "se (numero > 0):", "    imprimir(\"Positivo\")", "senao se (numero < 0):", "    imprimir(\"Negativo\")", "senao:", "    imprimir(\"Zero\")"],
+                distractors: ["se (numero >= 0):", "    imprimir(\"Neutro\")"]
+            },
+            "EX-1.5": {
+                blocks: ["sobreviventes = 7", "resto = sobreviventes % 2", "se (resto == 0):", "    imprimir(\"Equipes iguais\")", "senao:", "    imprimir(\"Sobra 1 sobrevivente\")"],
+                distractors: ["resto = sobreviventes // 2", "se (resto = 0):"]
+            },
+            "EX-1.6": {
+                blocks: ["nome = ler(\"Nome: \")", "idade = inteiro(ler(\"Idade: \"))", "imprimir(\"Olá, \" + nome + \"! Você tem \" + texto(idade) + \" anos.\")"],
+                distractors: ["idade = ler(\"Idade: \")", "imprimir(nome - idade)"]
+            },
+            "EX-2.5": {
+                blocks: ["nota = 7.5", "se (nota >= 9):", "    conceito = \"A\"", "senao se (nota >= 7):", "    conceito = \"B\"", "senao se (nota >= 5):", "    conceito = \"C\"", "senao:", "    conceito = \"D\"", "imprimir(conceito)"],
+                distractors: ["    conceito = \"E\"", "se (nota <= 9):"]
+            },
+            "EX-2.6": {
+                blocks: ["idade = 20", "tem_documento = True", "se (idade >= 18):", "    se (tem_documento):", "        imprimir(\"Pode entrar\")", "    senao:", "        imprimir(\"Precisa apresentar documento\")", "senao:", "    imprimir(\"Menor de idade\")"],
+                distractors: ["    se (idade >= 18):", "        imprimir(\"Entrada negada\")"]
+            },
+            "EX-3.5": {
+                blocks: ["enquanto (True):", "    senha = ler(\"Senha: \")", "    se (senha == \"1234\"):", "        break", "    imprimir(\"Senha incorreta\")", "imprimir(\"Acesso liberado!\")"],
+                distractors: ["    senha = \"1234\"", "enquanto (False):"]
+            },
+            "EX-3.6": {
+                blocks: ["soma = 0", "numero = inteiro(ler(\"Moedas (0 para parar): \"))", "enquanto (numero != 0):", "    soma = soma + numero", "    numero = inteiro(ler(\"Moedas (0 para parar): \"))", "imprimir(soma)"],
+                distractors: ["    soma = soma - numero", "enquanto (numero == 0):"]
+            },
+            "EX-4.6": {
+                blocks: ["pesos = [7.5, 8.0, 6.5, 9.0, 5.5]", "soma = 0", "para cada peso em pesos:", "    soma = soma + peso", "media = soma / tamanho(pesos)", "imprimir(media)"],
+                distractors: ["media = soma * tamanho(pesos)", "    soma = peso"]
+            },
+            "EX-4.7": {
+                blocks: ["matriz = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]", "soma_total = 0", "para cada linha em matriz:", "    para cada valor em linha:", "        soma_total = soma_total + valor", "imprimir(soma_total)"],
+                distractors: ["    para cada valor em matriz:", "        soma_total = soma_total + linha"]
+            },
+            "EX-5.7": {
+                blocks: ["funcao calcular_area_retangulo(base, altura):", "    retornar base * altura", "area = calcular_area_retangulo(5, 3)", "imprimir(area)"],
+                distractors: ["    retornar base + altura", "area = calcular_area_retangulo(5)"]
+            },
+            "EX-5.8": {
+                blocks: ["funcao valida_idade(idade):", "    retornar 0 <= idade <= 120", "enquanto (True):", "    idade = inteiro(ler(\"Idade: \"))", "    se (valida_idade(idade)):", "        break", "    imprimir(\"Idade inválida\")"],
+                distractors: ["    retornar 0 < idade < 120", "        continue"]
+            },
+            "EX-6.1": {
+                blocks: ["n = 4", "fatorial = 1", "i = 1", "enquanto (i <= n):", "    fatorial = fatorial * i", "    i = i + 1", "imprimir(fatorial)"],
+                distractors: ["    fatorial = fatorial + i", "enquanto (i < n):"]
+            },
+            "EX-6.2": {
+                blocks: ["soma = 0", "para i de 1 ate 3:", "    soma = soma + i", "imprimir(soma)"],
+                distractors: ["    soma = i", "para i de 1 ate 4:"]
+            }
+        };
+
+        // ---- Exercise Modal / Puzzle Logic ----
+        const COMPLETE_PREFIX = 'academia-logica:completo:';
+        let currentExerciseId = null;
+        let currentBlocks = [];   // sequência correta
+        let assembly = [];        // peças já encaixadas, na ordem em que o usuário colocou
+        let bank = [];            // peças ainda no banco (embaralhadas)
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function shuffle(arr) {
+            const a = arr.slice();
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function isExerciseComplete(exId) {
+            try { return localStorage.getItem(COMPLETE_PREFIX + exId) === 'true'; }
+            catch (e) { return false; }
+        }
+
+        function markCompletedBadges() {
+            document.querySelectorAll('div[role="button"]').forEach(card => {
+                const idEl = card.querySelector('span.text-gray-600');
+                if (!idEl) return;
+                const exId = idEl.textContent.trim();
+                if (isExerciseComplete(exId) && !idEl.querySelector('.fa-circle-check')) {
+                    idEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i>' + exId;
+                }
+            });
+        }
+
+        function openExercise(cardEl) {
+            const tagEl = cardEl.querySelector('span[class*="tag-"]');
+            const idEl = cardEl.querySelector('span.text-gray-600');
+            const titleEl = cardEl.querySelector('h3');
+            const descEl = cardEl.querySelector('p.text-gray-400');
+
+            if (!idEl || !titleEl || !descEl) return;
+
+            const exId = idEl.textContent.replace(/\s+/g, ' ').trim();
+            currentExerciseId = exId;
+
+            const modalTag = document.getElementById('modal-tag');
+            modalTag.className = tagEl.className;
+            modalTag.textContent = tagEl.textContent;
+
+            document.getElementById('modal-id').textContent = exId;
+            document.getElementById('modal-title').textContent = titleEl.textContent.trim();
+            document.getElementById('modal-desc').innerHTML = descEl.innerHTML;
+            document.getElementById('modal-complete-badge').classList.toggle('hidden', !isExerciseComplete(exId));
+            document.getElementById('modal-feedback').textContent = '';
+
+            const puzzle = PUZZLES[exId];
+            currentBlocks = puzzle ? puzzle.blocks : [];
+            assembly = [];
+            bank = puzzle ? shuffle(puzzle.blocks.concat(puzzle.distractors || [])) : [];
+            renderPuzzle();
+
+            const modal = document.getElementById('exercise-modal');
+            modal.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        }
+
+        function closeExercise() {
+            document.getElementById('exercise-modal').classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+            currentExerciseId = null;
+        }
+
+        function renderPuzzle() {
+            const slotsEl = document.getElementById('modal-puzzle-slots');
+            const bankEl = document.getElementById('modal-puzzle-bank');
+
+            slotsEl.innerHTML = currentBlocks.map((_, i) => {
+                if (assembly[i] !== undefined) {
+                    return `<div class="puzzle-slot puzzle-slot-filled" onclick="removeFromAssembly(${i})">${escapeHtml(assembly[i])}</div>`;
+                }
+                return `<div class="puzzle-slot">&nbsp;</div>`;
+            }).join('');
+
+            bankEl.innerHTML = bank.map((text, i) =>
+                `<div class="puzzle-tile" onclick="addToAssembly(${i})">${escapeHtml(text)}</div>`
+            ).join('') || '<span class="text-gray-600 text-sm font-sans">Todas as peças foram usadas.</span>';
+
+            document.getElementById('modal-feedback').textContent = '';
+        }
+
+        function addToAssembly(bankIndex) {
+            if (assembly.length >= currentBlocks.length) return;
+            const [text] = bank.splice(bankIndex, 1);
+            assembly.push(text);
+            renderPuzzle();
+        }
+
+        function removeFromAssembly(slotIndex) {
+            const [text] = assembly.splice(slotIndex, 1);
+            bank.push(text);
+            renderPuzzle();
+        }
+
+        function resetPuzzle() {
+            if (!currentExerciseId) return;
+            const puzzle = PUZZLES[currentExerciseId];
+            if (!puzzle) return;
+            assembly = [];
+            bank = shuffle(puzzle.blocks.concat(puzzle.distractors || []));
+            renderPuzzle();
+        }
+
+        function checkPuzzle() {
+            const feedbackEl = document.getElementById('modal-feedback');
+            const slotEls = document.querySelectorAll('#modal-puzzle-slots .puzzle-slot');
+
+            if (assembly.length < currentBlocks.length) {
+                feedbackEl.className = 'text-sm font-display flex-1 min-w-[10rem] text-amber-400';
+                feedbackEl.textContent = 'Ainda faltam peças para completar o algoritmo!';
+                return;
+            }
+
+            let allCorrect = true;
+            slotEls.forEach((el, i) => {
+                el.classList.remove('puzzle-slot-correct', 'puzzle-slot-wrong');
+                const correct = assembly[i] === currentBlocks[i];
+                el.classList.add(correct ? 'puzzle-slot-correct' : 'puzzle-slot-wrong');
+                if (!correct) allCorrect = false;
+            });
+
+            if (allCorrect) {
+                feedbackEl.className = 'text-sm font-display flex-1 min-w-[10rem] text-emerald-400';
+                feedbackEl.textContent = '✓ Perfeito! Algoritmo montado corretamente.';
+                if (currentExerciseId) {
+                    try { localStorage.setItem(COMPLETE_PREFIX + currentExerciseId, 'true'); } catch (e) {}
+                    document.getElementById('modal-complete-badge').classList.remove('hidden');
+                    markCompletedBadges();
+                }
+            } else {
+                feedbackEl.className = 'text-sm font-display flex-1 min-w-[10rem] text-red-400';
+                feedbackEl.textContent = 'Quase lá! As peças em vermelho estão fora de ordem ou erradas.';
+            }
+        }
+
+        document.getElementById('modal-backdrop').addEventListener('click', closeExercise);
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !document.getElementById('exercise-modal').classList.contains('hidden')) {
+                closeExercise();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', markCompletedBadges);
+    </script>
+</body>
+</html>
